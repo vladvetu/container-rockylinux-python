@@ -8,7 +8,8 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      base_tag: <replace_me>
+      base_img: docker.io/vladvetu/rockylinux
+      base_tag: 8
     
     steps:
       - name: Set up QEMU
@@ -32,16 +33,16 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ${{ github.repository_owner }}/<replace_me>
+            ${{ github.repository_owner }}/rockylinux-python
           # generate Docker tags based on the following events/attributes
           tags: |
             type=schedule
             type=ref,event=branch
-            type=semver,pattern={{version}}
+            type=semver,pattern={{ve${{ env.base_tag }}rsion}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             latest
-            ${{ env.base_tag }}
+            ${{ env.base_tag }}-py3
 
       - name: Build and push
         id: docker_build
